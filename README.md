@@ -346,3 +346,143 @@ No caso de funções que retornam múltiplos valores, você pode ignorar um dos 
 resultadoSoma, _, _ := calcularOperacoes(10, 3)
 fmt.Println("Resultado da soma:", resultadoSoma)  // Apenas a soma será exibida
 ```
+
+## 9. Operadores
+
+Os operadores em Go são usados para realizar operações sobre variáveis e valores. Eles podem ser divididos em várias categorias, como operadores aritméticos, de atribuição, relacionais, lógicos, unários e ternários. Abaixo estão os principais operadores e exemplos de como usá-los de forma clara.
+
+### Operadores Aritméticos
+
+São usados para realizar operações matemáticas básicas, como soma, subtração, multiplicação, divisão e o cálculo do resto da divisão.
+
+#### Exemplos de operadores aritméticos:
+
+```go
+// Soma de dois números
+soma := 10 + 5
+
+// Subtração de dois números
+subtracao := 15 - 4
+
+// Multiplicação de dois números
+multiplicacao := 7 * 3
+
+// Divisão de dois números
+divisao := 20 / 4
+
+// Resto da divisão
+resto := 9 % 4
+
+fmt.Println("Soma:", soma)
+fmt.Println("Subtração:", subtracao)
+fmt.Println("Multiplicação:", multiplicacao)
+fmt.Println("Divisão:", divisao)
+fmt.Println("Resto:", resto)
+```
+
+### Operadores de Atribuição
+
+Os operadores de atribuição são usados para dar valores a variáveis. Além da atribuição simples, Go oferece operadores de atribuição compostos.
+
+#### Exemplos de operadores de atribuição:
+
+```go
+// Atribuição simples
+var x int = 10
+
+// Atribuição com incremento
+x += 5 // x = x + 5
+
+// Atribuição com multiplicação
+x *= 2 // x = x * 2
+
+fmt.Println("Valor de x:", x)
+```
+
+### Operadores Relacionais
+
+Esses operadores são usados para comparar dois valores e retornar um valor booleano (`true` ou `false`), dependendo do resultado da comparação.
+
+#### Exemplos de operadores relacionais:
+
+```go
+// Verificando se os números são iguais
+igual := 10 == 10 // true
+
+// Verificando se os números são diferentes
+diferente := 10 != 5 // true
+
+// Verificando se um número é maior que o outro
+maior := 10 > 5 // true
+
+// Verificando se um número é menor ou igual ao outro
+menorOuIgual := 10 <= 15 // true
+
+fmt.Println("São iguais?", igual)
+fmt.Println("São diferentes?", diferente)
+fmt.Println("É maior?", maior)
+fmt.Println("É menor ou igual?", menorOuIgual)
+```
+
+### Operadores Lógicos
+
+Os operadores lógicos são usados para combinar expressões booleanas. Eles permitem realizar operações **E** (`&&`), **OU** (`||`) e **NÃO** (`!`).
+
+#### Exemplos de operadores lógicos:
+
+```go
+verdadeiro, falso := true, false
+
+// Operador E (AND) - verdadeiro se ambos os lados forem verdadeiros
+e := verdadeiro && falso // false
+
+// Operador OU (OR) - verdadeiro se ao menos um lado for verdadeiro
+ou := verdadeiro || falso // true
+
+// Operador NÃO (NOT) - inverte o valor lógico
+nao := !verdadeiro // false
+
+fmt.Println("Resultado E:", e)
+fmt.Println("Resultado OU:", ou)
+fmt.Println("Resultado NÃO:", nao)
+```
+
+### Operadores Unários
+
+Os operadores unários são usados para realizar operações em um único operando, como incremento (`++`), decremento (`--`) e operações combinadas de atribuição.
+
+#### Exemplos de operadores unários:
+
+```go
+numero := 5
+
+// Incremento
+numero++ // numero = numero + 1
+
+// Decremento
+numero-- // numero = numero - 1
+
+// Operação de atribuição combinada
+numero += 10 // numero = numero + 10
+
+fmt.Println("Valor final de numero:", numero)
+```
+
+### Operador Ternário (Simulado)
+
+Embora Go não tenha um operador ternário como em outras linguagens, podemos simular seu comportamento com uma estrutura condicional simples.
+
+#### Exemplo de operador ternário simulado:
+
+```go
+numero := 8
+var resultado string
+
+if numero > 5 {
+    resultado = "Maior que 5"
+} else {
+    resultado = "Menor ou igual a 5"
+}
+
+fmt.Println("Resultado:", resultado)
+```
