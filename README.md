@@ -266,3 +266,83 @@ fmt.Println(texto) // (string vazia)
 var booleano1 bool
 fmt.Println(booleano1) // false
 ```
+
+## 8. Funções
+
+As funções em Go são blocos de código que executam uma tarefa específica e podem retornar valores. Elas são definidas com a palavra-chave `func`, seguida pelo nome da função, parâmetros e tipo de retorno (se houver).
+
+### Declaração de Função
+
+Uma função em Go é declarada utilizando a palavra-chave `func`, seguida de seu nome, parâmetros entre parênteses e o tipo de retorno (se houver).
+
+#### Exemplo de função simples:
+
+```go
+func somar(n1 int, n2 int) int {
+    return n1 + n2
+}
+```
+
+Aqui, a função `somar` recebe dois parâmetros (`n1` e `n2`), ambos do tipo `int`, e retorna um valor do tipo `int`.
+
+### Função com múltiplos retornos
+
+Go permite que funções retornem múltiplos valores. Isso é útil quando se deseja retornar mais de um resultado de uma função.
+
+#### Exemplo de função com múltiplos retornos:
+
+```go
+func calcularOperacoes(n1, n2 int) (int, int, int) {
+    soma := n1 + n2
+    subtracao := n1 - n2
+    multiplicacao := n1 * n2
+    return soma, subtracao, multiplicacao
+}
+```
+
+Neste exemplo, a função `calcularOperacoes` retorna três valores: a soma, a subtração e a multiplicação de dois números.
+
+### Funções Anônimas
+
+Go também permite a criação de funções anônimas (sem nome), que podem ser atribuídas a variáveis e chamadas posteriormente.
+
+#### Exemplo de função anônima:
+
+```go
+var saudacao = func(nome string) string {
+    return "Olá, " + nome + "!"
+}
+```
+
+Aqui, a função anônima recebe um parâmetro `nome` do tipo `string`, cria uma saudação e retorna essa string.
+
+### Chamada de Funções
+
+Após definir as funções, você pode chamá-las no corpo do programa.
+
+#### Exemplo de chamada de função:
+
+```go
+func main() {
+    // Chama a função somar
+    resultadoSoma := somar(5, 7)
+    fmt.Println("Resultado da soma:", resultadoSoma)
+
+    // Chama a função anônima
+    resultadoSaudacao := saudacao("Carlos")
+    fmt.Println(resultadoSaudacao)  // "Olá, Carlos!"
+
+    // Chama a função com múltiplos retornos
+    soma, subtracao, multiplicacao := calcularOperacoes(10, 3)
+    fmt.Println("Soma:", soma, "Subtração:", subtracao, "Multiplicação:", multiplicacao)
+}
+```
+
+### Descartando valores não necessários
+
+No caso de funções que retornam múltiplos valores, você pode ignorar um dos retornos utilizando o caracter `_`. No exemplo abaixo, apenas o valor da soma é utilizado, e os outros dois valores são descartados:
+
+```go
+resultadoSoma, _, _ := calcularOperacoes(10, 3)
+fmt.Println("Resultado da soma:", resultadoSoma)  // Apenas a soma será exibida
+```
