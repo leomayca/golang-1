@@ -486,3 +486,73 @@ if numero > 5 {
 
 fmt.Println("Resultado:", resultado)
 ```
+
+## 10. Structs
+
+Structs são tipos compostos em Go, usados para agrupar dados diferentes em uma única estrutura. Cada elemento de uma struct é chamado de **campo** e pode ter tipos diferentes. Structs são muito úteis para modelar entidades mais complexas, como usuários, produtos ou qualquer outra coisa que precise agrupar informações relacionadas.
+
+### Definindo uma Struct
+
+Para definir uma struct, você usa a palavra-chave `type`, seguida pelo nome da struct, o tipo de dados de cada campo e os campos que ela terá.
+
+#### Exemplo de definição de struct:
+
+```go
+type Usuario struct {
+    Nome    string
+    Idade   uint8
+    Endereco Endereco
+}
+
+type Endereco struct {
+    Logradouro string
+    Numero     uint8
+}
+```
+
+### Criando e Inicializando Structs
+
+Uma struct pode ser inicializada de várias maneiras. Você pode usar o nome do tipo e definir cada campo individualmente, ou usar uma inicialização direta com valores.
+
+#### Exemplo 1: Inicialização com atribuição direta dos campos
+
+```go
+var u Usuario
+u.Nome = "Leonardo"
+u.Idade = 22
+fmt.Println(u)
+```
+
+Neste exemplo, criamos uma variável `u` do tipo `Usuario` e atribuimos valores a cada campo da struct.
+
+#### Exemplo 2: Inicialização com valores ao criar a struct
+
+```go
+enderecoExemplo := Endereco{"Rua dos Bobos", 0}
+usuario2 := Usuario{"Larissa", 22, enderecoExemplo}
+fmt.Println(usuario2)
+```
+
+Aqui, inicializamos a struct `Endereco` e passamos os valores diretamente ao criar a struct `Usuario`.
+
+#### Exemplo 3: Inicialização parcial de uma struct
+
+Go permite inicializar uma struct, especificando apenas os campos que você deseja atribuir. Os campos não especificados recebem valores zero (como `0` para `int`, `""` para `string`, etc).
+
+```go
+usuario3 := Usuario{Idade: 40}
+fmt.Println(usuario3)
+```
+
+Neste caso, a struct `Usuario` foi criada e o campo `Idade` foi atribuído com o valor `40`, enquanto o campo `Nome` e o campo `Endereco` terão seus valores padrão (em branco e `Endereco{}`).
+
+### Acessando Campos de uma Struct
+
+Após a criação de uma struct, você pode acessar seus campos diretamente usando o operador `.`.
+
+#### Exemplo de acesso a campos:
+
+```go
+fmt.Println("Nome do usuário:", usuario2.Nome)
+fmt.Println("Endereço do usuário:", usuario2.Endereco.Logradouro)
+```
