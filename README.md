@@ -1,6 +1,6 @@
-# Golang - Pacotes
+# Golang
 
-### 1 - Pacotes
+## 4. Pacotes
 
 ### O que é um Módulo?
 
@@ -69,6 +69,38 @@ func privada() {
 
 No exemplo acima, `Publica` pode ser acessada por outros pacotes, enquanto `privada` só pode ser usada dentro do pacote `exemplo`.
 
----
+## 5. Pacotes Externos
 
-Este guia fornece um panorama básico sobre pacotes, módulos, visibilidade de funções e variáveis e a instalação de binários no Go. Para mais detalhes, consulte a [documentação oficial](https://golang.org/doc/).
+Go permite o uso de pacotes externos para estender as funcionalidades do projeto. Para gerenciar essas dependências, utilizamos o `go get`.
+
+### Instalando um Pacote Externo
+
+Para baixar e instalar um pacote externo, utilize:
+
+```sh
+ go get [NOME_DO_PACOTE]
+```
+
+Por exemplo, para instalar o pacote `github.com/gorilla/mux`:
+
+```sh
+ go get github.com/gorilla/mux
+```
+
+Isso adicionará a dependência ao `go.mod` e baixará o código-fonte necessário para o diretório `go.sum`.
+
+### Atualizando Pacotes
+
+Para atualizar um pacote para a versão mais recente, utilize:
+
+```sh
+ go get -u [NOME_DO_PACOTE]
+```
+
+### Removendo Dependências Não Utilizadas
+
+Após remover referências a um pacote do código, você pode limpar dependências não utilizadas com:
+
+```sh
+ go mod tidy
+```
