@@ -104,3 +104,70 @@ Após remover referências a um pacote do código, você pode limpar dependênci
 ```sh
  go mod tidy
 ```
+
+## 6. Variáveis
+
+Go possui um sistema de tipagem estática, o que significa que cada variável deve ter um tipo definido. Existem diferentes formas de declarar variáveis na linguagem.
+
+### Declaração Explícita
+
+A declaração explícita de variáveis é feita utilizando a palavra-chave `var`, seguida do nome da variável, seu tipo e um valor opcional.
+
+```go
+var nome string = "GoLang"
+var idade int = 25
+```
+
+Se um valor inicial for fornecido, o compilador já sabe o tipo da variável e a declaração pode ser feita sem o tipo explícito:
+
+```go
+var linguagem = "Go" // O tipo será inferido como string
+```
+
+### Inferência de Tipo
+
+Go permite a inferência de tipo utilizando `:=`, que declara e inicializa a variável ao mesmo tempo, determinando seu tipo com base no valor atribuído.
+
+```go
+mensagem := "Olá, Go!" // O tipo inferido será string
+numero := 42            // O tipo inferido será int
+```
+
+### Declaração Múltipla
+
+É possível declarar múltiplas variáveis ao mesmo tempo:
+
+```go
+var (
+    nome   string = "Alice"
+    idade  int    = 30
+    ativo  bool   = true
+)
+```
+
+Ou utilizando inferência de tipo:
+
+```go
+nome, cidade := "Carlos", "São Paulo"
+```
+
+### Constantes
+
+Constantes são declaradas com `const` e precisam ter seu valor definido no momento da declaração.
+
+```go
+const pi float64 = 3.14159
+const mensagem = "Bem-vindo ao Go!"
+```
+
+### Troca de Valores
+
+Go permite a troca de valores entre variáveis de maneira simples:
+
+```go
+a, b := "primeiro", "segundo"
+a, b = b, a
+fmt.Println(a, b) // "segundo primeiro"
+```
+
+Essas são as principais formas de declaração e uso de variáveis em Go, facilitando a organização e legibilidade do código.
