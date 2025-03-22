@@ -170,4 +170,99 @@ a, b = b, a
 fmt.Println(a, b) // "segundo primeiro"
 ```
 
-Essas são as principais formas de declaração e uso de variáveis em Go, facilitando a organização e legibilidade do código.
+## 7. Tipos de Dados
+
+Go possui vários tipos de dados, que podem ser classificados em tipos numéricos, strings, booleanos e outros tipos compostos. Abaixo estão exemplos e explicações sobre cada um desses tipos.
+
+### Tipos Numéricos
+
+#### Números Inteiros
+
+Go oferece diferentes tipos de inteiros com diferentes tamanhos e sinais:
+
+- **int64**: Para números inteiros grandes, com sinal.
+- **uint32**: Para números inteiros não negativos (sem sinal).
+- **rune**: Alias para `int32`, usado para representar caracteres Unicode.
+- **byte**: Alias para `uint8`, usado para representar bytes.
+
+```go
+var numero int64 = -100000000000
+fmt.Println(numero)  // -100000000000
+
+var numero2 uint32 = 10000
+fmt.Println(numero2) // 10000
+
+var numero3 rune = 123456
+fmt.Println(numero3) // 123456
+
+var numero4 byte = 123
+fmt.Println(numero4) // 123
+```
+
+#### Números Reais
+
+Go tem dois tipos para números de ponto flutuante:
+
+- **float32**: Para números reais com precisão simples.
+- **float64**: Para números reais com precisão dupla.
+
+```go
+var numeroReal1 float32 = 123.45
+fmt.Println(numeroReal1) // 123.45
+
+var numeroReal2 float64 = 1230000000.45
+fmt.Println(numeroReal2) // 1230000000.45
+
+numeroReal3 := 12345.67
+fmt.Println(numeroReal3) // 12345.67
+```
+
+### Tipos de Texto
+
+- **string**: Usado para representar texto, é uma sequência de caracteres Unicode.
+- **rune**: Um `rune` é um valor do tipo `int32` e é usado para representar um único caractere Unicode.
+- **byte**: Um `byte` é um `uint8` e é frequentemente usado para manipulação de dados binários.
+
+```go
+var str string = "Texto"
+fmt.Println(str) // Texto
+
+str2 := "Texto2"
+fmt.Println(str2) // Texto2
+
+char := 'B'
+fmt.Println(char) // 66 (representação Unicode de 'B')
+```
+
+### Tipos Booleanos
+
+O tipo **bool** é utilizado para valores verdadeiros ou falsos.
+
+```go
+var booleano1 bool
+fmt.Println(booleano1) // false (valor padrão de bool)
+
+booleano2 := true
+fmt.Println(booleano2) // true
+```
+
+### Outros Tipos
+
+- **error**: Go tem um tipo `error` incorporado, usado para representar erros.
+
+```go
+var erro error = errors.New("Erro interno")
+fmt.Println(erro) // Erro interno
+```
+
+### Valores Não Inicializados
+
+Quando uma variável é declarada, mas não inicializada com um valor, ela recebe um valor zero (valor padrão) para o seu tipo:
+
+```go
+var texto string
+fmt.Println(texto) // (string vazia)
+
+var booleano1 bool
+fmt.Println(booleano1) // false
+```
