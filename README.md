@@ -556,3 +556,60 @@ Após a criação de uma struct, você pode acessar seus campos diretamente usan
 fmt.Println("Nome do usuário:", usuario2.Nome)
 fmt.Println("Endereço do usuário:", usuario2.Endereco.Logradouro)
 ```
+
+## 11. Herança (Composição de Structs)
+
+Diferente de linguagens orientadas a objetos que possuem herança de classes, Go utiliza **composição** para reaproveitar código e estruturar dados de forma hierárquica.
+
+Em Go, uma struct pode conter outra struct como um campo, permitindo o compartilhamento de atributos sem precisar de herança tradicional.
+
+### Definição de Structs com Composição
+
+Podemos criar uma struct `Pessoa` que contenha informações comuns, como nome e idade, e depois utilizá-la dentro de uma struct `Estudante`, que adiciona mais informações específicas.
+
+#### Exemplo:
+
+```go
+type Pessoa struct {
+    Nome      string
+    Sobrenome string
+    Idade     uint8
+    Altura    uint8
+}
+
+type Estudante struct {
+    Pessoa    // Composição: reaproveitando os campos da struct Pessoa
+    Curso     string
+    Faculdade string
+}
+```
+
+### Criando e Utilizando Structs Compostas
+
+```go
+func main() {
+    pessoa1 := Pessoa{"João", "Silva", 20, 178}
+    fmt.Println(pessoa1)
+
+    estudante1 := Estudante{Pessoa: pessoa1, Curso: "Engenharia", Faculdade: "USP"}
+    fmt.Println(estudante1)
+
+    // Podemos acessar os campos da struct interna diretamente
+    fmt.Println("Nome do estudante:", estudante1.Nome)
+    fmt.Println("Curso:", estudante1.Curso)
+}
+```
+
+### Como Funciona?
+
+- A struct `Estudante` **incorpora** a struct `Pessoa`, permitindo acesso direto aos seus campos sem precisar de uma sintaxe adicional.
+- O acesso aos campos da struct embutida (`Pessoa`) pode ser feito diretamente como se fossem da struct `Estudante`.
+- Essa abordagem permite reutilizar código sem precisar de herança tradicional.
+
+### Diferença Entre Composição e Herança
+
+| Característica  | Herança (em outras linguagens)                                  | Composição (Go)                                                     |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Reuso de código | Classes herdam atributos e métodos de uma superclasse           | Structs incorporam outras struct sem hierarquia fixa                |
+| Flexibilidade   | Relacionamento fixo (classe filha depende da classe pai)        | Relacionamento flexível (pode combinar struct de formas diferentes) |
+| Encapsulamento  | Possui visibilidade entre classes (pública, protegida, privada) | Go usa exportação por convenção (letra maiúscula para público)      |
