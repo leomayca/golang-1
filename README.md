@@ -614,6 +614,97 @@ func main() {
 | Flexibilidade   | Relacionamento fixo (classe filha depende da classe pai)        | Relacionamento flexível (pode combinar struct de formas diferentes) |
 | Encapsulamento  | Possui visibilidade entre classes (pública, protegida, privada) | Go usa exportação por convenção (letra maiúscula para público)      |
 
+## 12. Arrays e Slices
+
+Em Go, **arrays** e **slices** são estruturas usadas para armazenar coleções de elementos do mesmo tipo. Embora sejam semelhantes, possuem diferenças importantes em relação ao tamanho e flexibilidade.
+
+### Arrays
+
+Um **array** em Go é uma coleção de elementos de tamanho fixo. O tamanho do array faz parte do seu tipo, ou seja, arrays de tamanhos diferentes são considerados tipos distintos.
+
+#### Declarando Arrays
+
+```go
+var numeros [5]int  // Array de inteiros com 5 posições
+numeros[0] = 10     // Atribuindo um valor
+fmt.Println(numeros) // [10 0 0 0 0]
+```
+
+Também podemos inicializar um array diretamente com valores:
+
+```go
+nomes := [3]string{"Alice", "Bob", "Charlie"}
+fmt.Println(nomes) // ["Alice", "Bob", "Charlie"]
+```
+
+Se quisermos que o tamanho do array seja inferido automaticamente:
+
+```go
+valores := [...]int{1, 2, 3, 4, 5}
+fmt.Println(valores) // [1 2 3 4 5]
+```
+
+### Slices
+
+Um **slice** é semelhante a um array, mas com tamanho dinâmico. Ele é baseado em um array subjacente, permitindo redimensionamento e operações mais flexíveis.
+
+#### Criando um Slice
+
+```go
+numeros := []int{10, 20, 30, 40, 50}
+fmt.Println(numeros) // [10 20 30 40 50]
+```
+
+Note que não especificamos o tamanho do slice (`[]int`), diferentemente do array (`[5]int`).
+
+#### Adicionando Elementos ao Slice
+
+Podemos usar `append` para adicionar novos elementos a um slice:
+
+```go
+numeros = append(numeros, 60, 70)
+fmt.Println(numeros) // [10 20 30 40 50 60 70]
+```
+
+#### Criando um Slice a Partir de um Array
+
+Podemos criar um slice extraindo parte de um array:
+
+```go
+array := [5]int{1, 2, 3, 4, 5}
+slice := array[1:4] // Do índice 1 ao 3 (não inclui o 4)
+fmt.Println(slice)  // [2 3 4]
+```
+
+Se alterarmos um elemento do array original, o slice também será afetado:
+
+```go
+array[2] = 99
+fmt.Println(slice)  // [2 99 4]
+```
+
+Isso ocorre porque slices compartilham a mesma área de memória do array original.
+
+#### Verificando Tipos
+
+Podemos usar o pacote `reflect` para verificar se uma variável é um array ou slice:
+
+```go
+import "reflect"
+
+fmt.Println(reflect.TypeOf(array)) // [5]int
+fmt.Println(reflect.TypeOf(slice)) // []int
+```
+
+### Diferenças Entre Arrays e Slices
+
+| Característica       | Arrays                              | Slices                               |
+| -------------------- | ----------------------------------- | ------------------------------------ |
+| Tamanho              | Fixo                                | Dinâmico                             |
+| Flexibilidade        | Menos flexível                      | Mais flexível                        |
+| Compartilha memória? | Não                                 | Sim (se criado a partir de um array) |
+| Uso recomendado      | Quando o tamanho é conhecido e fixo | Quando o tamanho pode mudar          |
+
 ## 13. Ponteiros
 
 Em Go, um **ponteiro** é uma variável que armazena o endereço de memória de outra variável. Isso permite modificar valores diretamente na memória, evitando cópias desnecessárias de dados.
@@ -697,5 +788,3 @@ func main() {
 | ------------------ | -------------------------------------------------------------------------------------------------------------- |
 | Atribuição Direta  | Cria uma cópia do valor original. Modificações na cópia não afetam o valor original.                           |
 | Uso de Ponteiros   | O ponteiro armazena o endereço do valor original. Modificações feitas via ponteiro afetam a variável original. |
-
-Ponteiros são essenciais para otimizar o uso de memória e trabalhar com referências diretas aos dados em Go.
