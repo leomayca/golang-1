@@ -1159,3 +1159,63 @@ for {
 ```
 
 > **Nota:** Para sair de um loop infinito, podemos usar `break` ou `return`.
+
+## 19. Funções Avançadas - Retorno Nomeado
+
+Em Go, podemos nomear os valores de retorno de uma função, tornando o código mais legível e evitando a necessidade de declarar variáveis antes do `return`.
+
+### 🔹 Exemplo de Retorno Nomeado
+
+```go
+package main
+
+import "fmt"
+
+// A função retorna dois valores nomeados: soma e subtracao
+func calculosMatematicos(n1, n2 int) (soma int, subtracao int) {
+    soma = n1 + n2
+    subtracao = n1 - n2
+    return // Retorna automaticamente os valores nomeados
+}
+
+func main() {
+    soma, subtracao := calculosMatematicos(10, 20)
+    fmt.Println("Soma:", soma)
+    fmt.Println("Subtração:", subtracao)
+}
+```
+
+### 🔹 Como Funciona?
+
+- Os parâmetros de retorno são declarados na assinatura da função:
+  ```go
+  func calculosMatematicos(n1, n2 int) (soma int, subtracao int)
+  ```
+- Dentro da função, podemos atribuir valores diretamente a `soma` e `subtracao`, sem precisar criar variáveis novas.
+- O `return` vazio retorna automaticamente os valores nomeados.
+
+### 🔹 Quando Usar?
+
+✅ Quando há múltiplos valores de retorno, e queremos tornar o código mais intuitivo.  
+✅ Quando os nomes dos retornos ajudam a entender melhor a função.  
+❌ Evite quando os retornos nomeados não forem necessários, pois podem tornar o código menos conciso.
+
+### 🔹 Comparação com Retorno Padrão
+
+**Sem retorno nomeado:**
+
+```go
+func calculosMatematicos(n1, n2 int) (int, int) {
+    return n1 + n2, n1 - n2
+}
+```
+
+**Com retorno nomeado:**
+
+```go
+func calculosMatematicos(n1, n2 int) (soma int, subtracao int) {
+    soma = n1 + n2
+    subtracao = n1 - n2
+    return
+}
+```
