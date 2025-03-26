@@ -862,3 +862,104 @@ func main() {
 | -------------------- | --------------------------- | ----------- |
 | `make([]int, 5, 10)` | Sim (`cap=10`)              | Sim         |
 | `[]int{1, 2, 3}`     | Não (depende dos elementos) | Sim         |
+
+## 15. Maps
+
+Os **maps** em Go são coleções de pares chave-valor, semelhantes a dicionários em outras linguagens. Eles são úteis quando precisamos armazenar e acessar dados de maneira rápida com base em uma chave.
+
+### Criando um Map
+
+Para declarar um map, usamos a sintaxe:
+
+```go
+map[TipoDaChave]TipoDoValor
+```
+
+Exemplo:
+
+```go
+usuario := map[string]string{
+    "nome":      "Pedro",
+    "sobrenome": "Silva",
+}
+
+fmt.Println(usuario) // Output: map[nome:Pedro sobrenome:Silva]
+```
+
+### Acessando e Modificando Elementos
+
+Podemos acessar um valor usando sua chave:
+
+```go
+fmt.Println(usuario["nome"]) // Output: Pedro
+```
+
+Também podemos adicionar ou modificar valores:
+
+```go
+usuario["sobrenome"] = "Souza"
+usuario["idade"] = "25"
+fmt.Println(usuario) // Output: map[nome:Pedro sobrenome:Souza idade:25]
+```
+
+### Maps Aninhados
+
+Go permite criar **maps dentro de maps**, úteis para estruturar melhor os dados:
+
+```go
+usuario2 := map[string]map[string]string{
+    "nome": {
+        "primeiro": "João",
+        "ultimo":   "Pedro",
+    },
+    "curso": {
+        "nome":   "Engenharia",
+        "campus": "Campus 1",
+    },
+}
+
+fmt.Println(usuario2)
+// Output: map[nome:map[primeiro:João ultimo:Pedro] curso:map[nome:Engenharia campus:Campus 1]]
+```
+
+### Removendo Elementos
+
+Para remover uma chave de um map, usamos `delete`:
+
+```go
+delete(usuario2, "nome")
+fmt.Println(usuario2)
+// Output: map[curso:map[nome:Engenharia campus:Campus 1]]
+```
+
+### Adicionando Novas Chaves
+
+```go
+usuario2["signo"] = map[string]string{
+    "nome": "Gêmeos",
+}
+fmt.Println(usuario2)
+```
+
+### Criando um Map com `make`
+
+Podemos criar um map vazio usando `make`:
+
+```go
+produtos := make(map[string]float64)
+produtos["notebook"] = 2999.90
+produtos["mouse"] = 149.99
+
+fmt.Println(produtos) // Output: map[notebook:2999.9 mouse:149.99]
+```
+
+### Verificando Se uma Chave Existe
+
+```go
+valor, existe := produtos["notebook"]
+if existe {
+    fmt.Println("Preço do notebook:", valor)
+} else {
+    fmt.Println("Produto não encontrado")
+}
+```
