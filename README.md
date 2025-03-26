@@ -963,3 +963,37 @@ if existe {
     fmt.Println("Produto não encontrado")
 }
 ```
+
+## 16. Estruturas de Controle - `if` e `else`
+
+O `if` e o `else` são usados para controlar o fluxo do código com base em condições.
+
+### Condicional `if`
+
+O `if` avalia uma condição e executa um bloco de código se for verdadeira.
+
+```go
+numero := 10
+
+if numero > 15 {
+    fmt.Println("Maior que 15")
+} else {
+    fmt.Println("Menor ou igual a 15")
+}
+
+// Saída: Menor ou igual a 15
+```
+
+#### `if` com inicialização
+
+Podemos declarar uma variável dentro do próprio `if`:
+
+```go
+if outroNumero := numero; outroNumero > 0 {
+    fmt.Println("Número é positivo")
+} else if outroNumero < -10 {
+    fmt.Println("Número é menor que -10")
+} else {
+    fmt.Println("Número entre 0 e -10")
+}
+```
