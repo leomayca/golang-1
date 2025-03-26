@@ -1073,3 +1073,89 @@ func main() {
 	fmt.Println(exemploFallthrough(1))
 }
 ```
+
+## 18. Estruturas de Controle - Loops (`for`)
+
+Em Go, o único tipo de loop disponível é o `for`, mas ele pode ser utilizado de diversas formas.
+
+### 1. **Loop com condição (`while` disfarçado)**
+
+Podemos usar `for` como um `while`, onde a repetição ocorre enquanto a condição for verdadeira.
+
+```go
+i := 0
+for i < 3 {
+    fmt.Println("Incrementando i:", i)
+    i++
+    time.Sleep(time.Second)
+}
+```
+
+### 2. **Loop com inicialização, condição e incremento**
+
+Essa é a forma mais comum, semelhante ao `for` tradicional de outras linguagens.
+
+```go
+for j := 0; j < 10; j += 5 {
+    fmt.Println("Incrementando j:", j)
+    time.Sleep(time.Second)
+}
+```
+
+### 3. **Loop sobre arrays e slices (`for range`)**
+
+Podemos iterar sobre arrays e slices pegando o índice e o valor:
+
+```go
+nomes := []string{"João", "Davi", "Lucas"}
+
+for indice, nome := range nomes {
+    fmt.Println(indice, nome)
+}
+```
+
+Se não precisarmos do índice, podemos ignorá-lo usando `_`:
+
+```go
+for _, nome := range nomes {
+    fmt.Println(nome)
+}
+```
+
+### 4. **Loop sobre strings (`for range`)**
+
+Quando iteramos sobre strings, cada iteração retorna um índice e um `rune` (caractere Unicode):
+
+```go
+for indice, letra := range "PALAVRA" {
+    fmt.Println(indice, string(letra))
+}
+```
+
+### 5. **Loop sobre maps (`for range`)**
+
+Podemos percorrer um `map` acessando as chaves e valores:
+
+```go
+usuario := map[string]string{
+    "nome":      "Leonardo",
+    "sobrenome": "Silva",
+}
+
+for chave, valor := range usuario {
+    fmt.Println(chave, ":", valor)
+}
+```
+
+### 6. **Loop infinito**
+
+Um `for` sem condições cria um loop infinito, útil para servidores e processos contínuos:
+
+```go
+for {
+    fmt.Println("Executando infinitamente...")
+    time.Sleep(time.Second)
+}
+```
+
+> **Nota:** Para sair de um loop infinito, podemos usar `break` ou `return`.
