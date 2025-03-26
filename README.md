@@ -788,3 +788,77 @@ func main() {
 | ------------------ | -------------------------------------------------------------------------------------------------------------- |
 | Atribuição Direta  | Cria uma cópia do valor original. Modificações na cópia não afetam o valor original.                           |
 | Uso de Ponteiros   | O ponteiro armazena o endereço do valor original. Modificações feitas via ponteiro afetam a variável original. |
+
+## 14. Arrays Internos
+
+Em Go, **slices** possuem uma capacidade (`cap`) que define até quantos elementos podem armazenar antes de precisar realocar memória. Para criar slices com um tamanho e uma capacidade inicial específica, usamos a função `make`.
+
+### Criando um Slice com `make`
+
+```go
+slice := make([]int, 5, 10)
+fmt.Println(slice)      // [0 0 0 0 0] (inicializado com 5 elementos)
+fmt.Println(len(slice)) // 5 (tamanho)
+fmt.Println(cap(slice)) // 10 (capacidade)
+```
+
+Aqui:
+
+- O **tamanho** (`len`) do slice é `5`, ou seja, ele começa com 5 elementos.
+- A **capacidade** (`cap`) é `10`, o que significa que pode crescer até 10 elementos antes de precisar realocar memória.
+
+### Comportamento ao Adicionar Elementos
+
+Se adicionarmos elementos além da capacidade inicial, o Go criará um novo array interno com uma capacidade maior.
+
+```go
+slice = append(slice, 1, 2, 3, 4, 5)
+fmt.Println(slice)      // [0 0 0 0 0 1 2 3 4 5]
+fmt.Println(len(slice)) // 10
+fmt.Println(cap(slice)) // 10
+
+slice = append(slice, 6)
+fmt.Println(len(slice)) // 11
+fmt.Println(cap(slice)) // Capacidade aumentará automaticamente
+```
+
+Neste caso, como o slice atingiu sua capacidade máxima (`10`), o Go criou um novo array interno para acomodar mais elementos, geralmente dobrando a capacidade.
+
+### Exemplo Prático
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Arrays Internos")
+
+    slice1 := make([]float32, 5, 7)
+    fmt.Println("Slice1:", slice1)
+    fmt.Println("Tamanho:", len(slice1))
+    fmt.Println("Capacidade:", cap(slice1))
+
+    slice1 = append(slice1, 10, 20)
+    fmt.Println("Após append:", slice1)
+    fmt.Println("Tamanho:", len(slice1))
+    fmt.Println("Capacidade:", cap(slice1))
+
+    slice1 = append(slice1, 30) // Capacidade ultrapassada
+    fmt.Println("Após exceder capacidade:", slice1)
+    fmt.Println("Novo tamanho:", len(slice1))
+    fmt.Println("Nova capacidade:", cap(slice1)) // Novo array interno criado
+}
+```
+
+### Quando Usar `make`?
+
+- Quando precisamos criar um **slice com tamanho e capacidade pré-definidos** para evitar realocações desnecessárias.
+- Quando estamos criando slices **dinâmicos** e queremos otimizar o desempenho.
+
+### Diferença Entre `make` e Slices Literais
+
+| Método               | Capacidade Definida         | Modificável |
+| -------------------- | --------------------------- | ----------- |
+| `make([]int, 5, 10)` | Sim (`cap=10`)              | Sim         |
+| `[]int{1, 2, 3}`     | Não (depende dos elementos) | Sim         |
