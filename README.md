@@ -1219,3 +1219,62 @@ func calculosMatematicos(n1, n2 int) (soma int, subtracao int) {
     return
 }
 ```
+
+## 20. Funções Avançadas - Variádicas
+
+As funções variádicas em Go permitem que você passe um número variável de argumentos para uma função. Isso é útil quando não sabemos quantos parâmetros precisamos passar, tornando o código mais flexível.
+
+### 🔹 Como Funciona?
+
+Você declara a função com três pontos (`...`) antes do tipo do parâmetro para indicar que ela pode receber um número variável de valores desse tipo.
+
+### 🔹 Exemplo de Função Variádica
+
+```go
+package main
+
+import "fmt"
+
+// Função que soma todos os números passados como argumento
+func somar(numeros ...int) int {
+    total := 0
+    // Itera sobre todos os números passados
+    for _, numero := range numeros {
+        total += numero
+    }
+    return total
+}
+
+// Função que imprime um texto seguido de todos os números passados
+func imprimirNumeros(texto string, numeros ...int) {
+    for _, numero := range numeros {
+        fmt.Println(texto, numero)
+    }
+}
+
+func main() {
+    fmt.Println("Funções Variádicas")
+
+    // Chamando a função somar com um número variável de argumentos
+    totalSoma := somar(2, 4, 6, 8)
+    fmt.Println("Total da Soma:", totalSoma)
+
+    // Chamando a função imprimirNumeros com um texto e números
+    imprimirNumeros("Número é:", 10, 20, 30, 40)
+}
+```
+
+### 🔹 Explicação
+
+- **Função `somar`**: Recebe um número variável de inteiros e retorna a soma de todos os valores. Quando você chama a função, pode passar qualquer quantidade de números.
+- **Função `imprimirNumeros`**: Recebe uma string e um número variável de inteiros. Ela imprime a string seguida de cada número, um por vez.
+
+### 🔹 Usando Funções Variádicas
+
+Você pode passar qualquer número de argumentos para a função variádica, como mostrado no exemplo acima. Se você quiser passar um _slice_ para uma função variádica, basta usar o operador `...` para desembrulhar o slice e passá-lo como argumentos individuais:
+
+```go
+numeros := []int{1, 2, 3, 4}
+resultado := somar(numeros...) // Passando o slice como parâmetros individuais
+fmt.Println("Resultado da soma:", resultado)
+```
