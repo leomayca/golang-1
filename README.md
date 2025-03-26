@@ -997,3 +997,79 @@ if outroNumero := numero; outroNumero > 0 {
     fmt.Println("Número entre 0 e -10")
 }
 ```
+
+## 17. Estruturas de Controle - `switch`
+
+O `switch` é uma alternativa ao `if else` quando precisamos comparar uma variável com múltiplos valores.
+
+### Exemplo básico
+
+```go
+func diaDaSemana(numero int) string {
+	switch numero {
+	case 1:
+		return "Domingo"
+	case 2:
+		return "Segunda"
+	case 3:
+		return "Terça"
+	case 4:
+		return "Quarta"
+	case 5:
+		return "Quinta"
+	case 6:
+		return "Sexta"
+	case 7:
+		return "Sábado"
+	default:
+		return "Número Inválido"
+	}
+}
+
+func main() {
+	fmt.Println(diaDaSemana(3)) // Saída: Terça
+}
+```
+
+### `switch` sem expressão
+
+Podemos usar um `switch` sem comparar diretamente um valor, tornando a lógica mais flexível:
+
+```go
+func verificaNumero(numero int) string {
+	switch {
+	case numero > 0:
+		return "Número positivo"
+	case numero < 0:
+		return "Número negativo"
+	default:
+		return "Zero"
+	}
+}
+
+func main() {
+	fmt.Println(verificaNumero(-10)) // Saída: Número negativo
+}
+```
+
+### `fallthrough`
+
+O `fallthrough` permite que o próximo `case` também seja executado, mesmo que ele não corresponda à condição:
+
+```go
+func exemploFallthrough(numero int) string {
+	switch numero {
+	case 1:
+		fmt.Println("Primeiro caso")
+		fallthrough
+	case 2:
+		return "Segundo caso também foi executado"
+	default:
+		return "Caso padrão"
+	}
+}
+
+func main() {
+	fmt.Println(exemploFallthrough(1))
+}
+```
