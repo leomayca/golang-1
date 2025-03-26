@@ -1164,7 +1164,7 @@ for {
 
 Em Go, podemos nomear os valores de retorno de uma função, tornando o código mais legível e evitando a necessidade de declarar variáveis antes do `return`.
 
-### 🔹 Exemplo de Retorno Nomeado
+### Exemplo de Retorno Nomeado
 
 ```go
 package main
@@ -1185,7 +1185,7 @@ func main() {
 }
 ```
 
-### 🔹 Como Funciona?
+### Como Funciona?
 
 - Os parâmetros de retorno são declarados na assinatura da função:
   ```go
@@ -1194,13 +1194,12 @@ func main() {
 - Dentro da função, podemos atribuir valores diretamente a `soma` e `subtracao`, sem precisar criar variáveis novas.
 - O `return` vazio retorna automaticamente os valores nomeados.
 
-### 🔹 Quando Usar?
+### Quando Usar?
 
-✅ Quando há múltiplos valores de retorno, e queremos tornar o código mais intuitivo.  
-✅ Quando os nomes dos retornos ajudam a entender melhor a função.  
-❌ Evite quando os retornos nomeados não forem necessários, pois podem tornar o código menos conciso.
+- Quando há múltiplos valores de retorno, e queremos tornar o código mais intuitivo.
+- Quando os nomes dos retornos ajudam a entender melhor a função.
 
-### 🔹 Comparação com Retorno Padrão
+### Comparação com Retorno Padrão
 
 **Sem retorno nomeado:**
 
@@ -1224,11 +1223,11 @@ func calculosMatematicos(n1, n2 int) (soma int, subtracao int) {
 
 As funções variádicas em Go permitem que você passe um número variável de argumentos para uma função. Isso é útil quando não sabemos quantos parâmetros precisamos passar, tornando o código mais flexível.
 
-### 🔹 Como Funciona?
+### Como Funciona?
 
 Você declara a função com três pontos (`...`) antes do tipo do parâmetro para indicar que ela pode receber um número variável de valores desse tipo.
 
-### 🔹 Exemplo de Função Variádica
+### Exemplo de Função Variádica
 
 ```go
 package main
@@ -1264,12 +1263,12 @@ func main() {
 }
 ```
 
-### 🔹 Explicação
+### Explicação
 
 - **Função `somar`**: Recebe um número variável de inteiros e retorna a soma de todos os valores. Quando você chama a função, pode passar qualquer quantidade de números.
 - **Função `imprimirNumeros`**: Recebe uma string e um número variável de inteiros. Ela imprime a string seguida de cada número, um por vez.
 
-### 🔹 Usando Funções Variádicas
+### Usando Funções Variádicas
 
 Você pode passar qualquer número de argumentos para a função variádica, como mostrado no exemplo acima. Se você quiser passar um _slice_ para uma função variádica, basta usar o operador `...` para desembrulhar o slice e passá-lo como argumentos individuais:
 
@@ -1278,3 +1277,86 @@ numeros := []int{1, 2, 3, 4}
 resultado := somar(numeros...) // Passando o slice como parâmetros individuais
 fmt.Println("Resultado da soma:", resultado)
 ```
+
+## 21. Funções Avançadas - Anônimas
+
+As **funções anônimas** são funções que não possuem um nome e podem ser definidas diretamente dentro de expressões. Elas são úteis quando queremos criar funções rápidas e reutilizáveis sem precisar nomeá-las.
+
+### Exemplo Básico de Função Anônima
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Funções Anônimas")
+
+    // Função anônima sendo executada imediatamente
+    func() {
+        fmt.Println("Olá Mundo!")
+    }()
+}
+```
+
+Aqui, criamos uma função sem nome e a chamamos imediatamente após sua definição, usando `()`.
+
+### Função Anônima com Parâmetros
+
+Também podemos passar parâmetros para uma função anônima:
+
+```go
+func main() {
+    func(texto string) {
+        fmt.Println(texto)
+    }("Passando Parâmetro")
+}
+```
+
+### Função Anônima com Retorno
+
+As funções anônimas podem retornar valores, assim como funções normais:
+
+```go
+func main() {
+    retorno := func(texto string) string {
+        return fmt.Sprintf("Recebido -> %s", texto)
+    }("Parâmetro")
+
+    fmt.Println(retorno)
+}
+```
+
+Aqui, a função anônima recebe uma string como argumento, formata a string e retorna o valor, que é armazenado na variável `retorno`.
+
+### Armazenando Funções Anônimas em Variáveis
+
+Podemos armazenar funções anônimas em variáveis para reutilizá-las:
+
+```go
+func main() {
+    saudacao := func(nome string) string {
+        return "Olá, " + nome + "!"
+    }
+
+    fmt.Println(saudacao("Maria"))
+}
+```
+
+### Usando Funções Anônimas como Argumentos
+
+Podemos passar funções anônimas como argumentos para outras funções:
+
+```go
+func executar(funcao func(string) string, nome string) {
+    fmt.Println(funcao(nome))
+}
+
+func main() {
+    executar(func(nome string) string {
+        return "Seja bem-vindo, " + nome + "!"
+    }, "Carlos")
+}
+```
+
+Aqui, passamos uma função anônima como argumento para a função `executar`, que a chama internamente.
