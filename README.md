@@ -1360,3 +1360,77 @@ func main() {
 ```
 
 Aqui, passamos uma função anônima como argumento para a função `executar`, que a chama internamente.
+
+## 22. Funções Avançadas - Recursivas
+
+Funções recursivas são funções que chamam a si mesmas para resolver um problema. Elas são úteis para problemas que podem ser divididos em subproblemas menores, como cálculos matemáticos e estruturas de dados recursivas.
+
+### Exemplo: Sequência de Fibonacci
+
+A sequência de Fibonacci é um clássico exemplo de recursão. Cada número da sequência é a soma dos dois números anteriores:
+
+```go
+package main
+
+import "fmt"
+
+func fibonacci(posicao uint) uint {
+	if posicao <= 1 {
+		return posicao
+	}
+	return fibonacci(posicao-2) + fibonacci(posicao-1)
+}
+
+func main() {
+	fmt.Println("Recursivas")
+
+	// Exemplo de chamada
+	posicao := uint(11)
+	fmt.Println(fibonacci(posicao)) // Retorna o 11º número da sequência
+
+	// Exibindo os primeiros números da sequência
+	posicao2 := uint(7)
+	for i := uint(1); i <= posicao2; i++ {
+		fmt.Println(fibonacci(i))
+	}
+}
+```
+
+### Explicação
+
+- **Caso base**: Se `posicao` for `0` ou `1`, a função retorna o próprio valor, pois esses são os primeiros números da sequência.
+- **Chamada recursiva**: A função chama a si mesma para calcular os dois números anteriores e os soma.
+
+### Problemas com Recursão Simples
+
+Embora a abordagem recursiva seja elegante, ela pode ser ineficiente para valores altos de `posicao`, pois muitos cálculos são repetidos.
+
+### Melhorando com Programação Dinâmica (Memoization)
+
+Podemos otimizar a função usando um mapa para armazenar valores já calculados:
+
+```go
+package main
+
+import "fmt"
+
+var memo = map[uint]uint{}
+
+func fibonacci(posicao uint) uint {
+	if posicao <= 1 {
+		return posicao
+	}
+	if valor, existe := memo[posicao]; existe {
+		return valor
+	}
+	memo[posicao] = fibonacci(posicao-2) + fibonacci(posicao-1)
+	return memo[posicao]
+}
+
+func main() {
+	fmt.Println("Fibonacci com Memoization")
+	for i := uint(1); i <= 10; i++ {
+		fmt.Println(fibonacci(i))
+	}
+}
+```
