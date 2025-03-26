@@ -613,3 +613,89 @@ func main() {
 | Reuso de código | Classes herdam atributos e métodos de uma superclasse           | Structs incorporam outras struct sem hierarquia fixa                |
 | Flexibilidade   | Relacionamento fixo (classe filha depende da classe pai)        | Relacionamento flexível (pode combinar struct de formas diferentes) |
 | Encapsulamento  | Possui visibilidade entre classes (pública, protegida, privada) | Go usa exportação por convenção (letra maiúscula para público)      |
+
+## 13. Ponteiros
+
+Em Go, um **ponteiro** é uma variável que armazena o endereço de memória de outra variável. Isso permite modificar valores diretamente na memória, evitando cópias desnecessárias de dados.
+
+### Declarando Ponteiros
+
+Para declarar um ponteiro, utilizamos o operador `*` antes do tipo da variável:
+
+```go
+var ponteiro *int  // Ponteiro para um valor do tipo int
+```
+
+O valor inicial de um ponteiro sem atribuição é `nil` (nulo), pois ele ainda não aponta para nenhum endereço válido.
+
+### Obtendo o Endereço de Memória
+
+Podemos obter o endereço de uma variável utilizando o operador `&`:
+
+```go
+numero := 10
+ponteiro := &numero // Ponteiro recebe o endereço da variável numero
+fmt.Println("Endereço de memória de numero:", ponteiro)
+```
+
+### Desreferenciando um Ponteiro
+
+A desreferenciação (`*ponteiro`) nos permite acessar o valor armazenado no endereço apontado pelo ponteiro:
+
+```go
+fmt.Println("Valor armazenado no ponteiro:", *ponteiro) // Saída: 10
+```
+
+### Modificando Valores Usando Ponteiros
+
+Quando alteramos o valor da variável original, o ponteiro reflete essa mudança:
+
+```go
+numero = 20
+fmt.Println("Valor atualizado:", *ponteiro) // Saída: 20
+```
+
+Também podemos modificar o valor da variável original através do ponteiro:
+
+```go
+*ponteiro = 30
+fmt.Println("Novo valor de numero:", numero) // Saída: 30
+```
+
+### Exemplo Completo:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var numero int = 100
+    var ponteiro *int
+
+    fmt.Println("Valor de numero:", numero)
+    fmt.Println("Valor do ponteiro (antes da atribuição):", ponteiro)
+
+    ponteiro = &numero // Ponteiro recebe o endereço da variável numero
+    fmt.Println("Endereço de numero:", ponteiro)
+    fmt.Println("Valor apontado pelo ponteiro:", *ponteiro)
+
+    *ponteiro = 200 // Modificando o valor diretamente na memória
+    fmt.Println("Novo valor de numero:", numero)
+}
+```
+
+### Quando Usar Ponteiros?
+
+- Para **evitar cópias desnecessárias** de valores grandes na memória.
+- Para **modificar valores dentro de funções**, pois em Go os argumentos são passados por cópia por padrão.
+- Para **trabalhar com estruturas de dados mais eficientes**, como listas e árvores.
+
+### Diferença Entre Valor e Referência
+
+| Tipo de Atribuição | Comportamento                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Atribuição Direta  | Cria uma cópia do valor original. Modificações na cópia não afetam o valor original.                           |
+| Uso de Ponteiros   | O ponteiro armazena o endereço do valor original. Modificações feitas via ponteiro afetam a variável original. |
+
+Ponteiros são essenciais para otimizar o uso de memória e trabalhar com referências diretas aos dados em Go.
