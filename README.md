@@ -1882,3 +1882,86 @@ func main() {
 
 3. **Função `main`**
    - Exibe mensagens e o valor de `n`, que já foi inicializado no `init`.
+
+# 28. Métodos em Go
+
+Em Go, métodos são funções associadas a um tipo específico (geralmente structs). Eles permitem que os dados sejam manipulados de maneira organizada e orientada a objetos.
+
+## Definição de Métodos
+
+Métodos em Go são semelhantes a funções normais, mas possuem um receptor (receiver), que define a qual tipo o método pertence.
+
+```go
+package main
+
+import "fmt"
+
+type Usuario struct {
+    nome  string
+    idade uint8
+}
+
+// Método associado ao tipo Usuario
+func (u Usuario) exibirInformacoes() {
+    fmt.Printf("Nome: %s, Idade: %d\n", u.nome, u.idade)
+}
+
+func main() {
+    usuario1 := Usuario{"Alice", 25}
+    usuario1.exibirInformacoes()
+}
+```
+
+### Tipos de Receptores
+
+#### 1. Receptor por Valor
+
+Quando um método recebe a struct por valor, ele trabalha com uma cópia dos dados, sem modificar o original.
+
+```go
+func (u Usuario) saudacao() {
+    fmt.Printf("Olá, %s!\n", u.nome)
+}
+```
+
+#### 2. Receptor por Ponteiro
+
+Quando um método recebe a struct por ponteiro, ele pode modificar os dados do objeto original.
+
+```go
+func (u *Usuario) fazerAniversario() {
+    u.idade++
+}
+```
+
+## Exemplo Completo
+
+```go
+package main
+
+import "fmt"
+
+type Carro struct {
+    marca  string
+    modelo string
+    ano    int
+}
+
+// Método com receptor por valor
+func (c Carro) descricao() string {
+    return fmt.Sprintf("%s %s (%d)", c.marca, c.modelo, c.ano)
+}
+
+// Método com receptor por ponteiro
+func (c *Carro) atualizarAno(novoAno int) {
+    c.ano = novoAno
+}
+
+func main() {
+    carro := Carro{"Toyota", "Corolla", 2020}
+    fmt.Println("Descrição antes da atualização:", carro.descricao())
+
+    carro.atualizarAno(2024)
+    fmt.Println("Descrição após atualização:", carro.descricao())
+}
+```
