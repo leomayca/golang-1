@@ -1784,8 +1784,6 @@ func main() {
 
 Em Go, os ponteiros permitem que funções modifiquem valores diretamente na memória, sem precisar retornar um novo valor. Isso evita cópias desnecessárias e melhora a eficiência do código.
 
----
-
 ### Exemplo
 
 ```go
@@ -1816,8 +1814,6 @@ func main() {
 }
 ```
 
----
-
 ### Explicação
 
 1. **Função sem ponteiro** (`inverterSinal`)
@@ -1844,8 +1840,6 @@ A função `init` é uma função especial em Go que é executada automaticament
 - Pode ser definida múltiplas vezes no mesmo pacote.
 - Não recebe argumentos nem retorna valores.
 
----
-
 ### Exemplo
 
 ```go
@@ -1867,8 +1861,6 @@ func main() {
 }
 ```
 
----
-
 ### Explicação
 
 1. **Variável Global `n`**
@@ -1883,11 +1875,11 @@ func main() {
 3. **Função `main`**
    - Exibe mensagens e o valor de `n`, que já foi inicializado no `init`.
 
-# 28. Métodos em Go
+# 28. Métodos
 
 Em Go, métodos são funções associadas a um tipo específico (geralmente structs). Eles permitem que os dados sejam manipulados de maneira organizada e orientada a objetos.
 
-## Definição de Métodos
+### Definição de Métodos
 
 Métodos em Go são semelhantes a funções normais, mas possuem um receptor (receiver), que define a qual tipo o método pertence.
 
@@ -1965,3 +1957,65 @@ func main() {
     fmt.Println("Descrição após atualização:", carro.descricao())
 }
 ```
+
+## 29. Interfaces
+
+Interfaces são tipos que definem um conjunto de métodos que um struct deve implementar. Elas permitem a criação de código mais flexível e desacoplado, possibilitando que diferentes tipos compartilhem um comportamento comum.
+
+### Definição de uma Interface
+
+Uma interface em Go é definida por um conjunto de métodos que um tipo deve implementar. Qualquer struct que implemente esses métodos é considerado compatível com a interface.
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// Definição da interface
+type mensagem interface {
+	enviar()
+}
+
+// Structs que implementam a interface
+type email struct {
+	destinatario string
+	conteudo     string
+}
+
+func (e email) enviar() {
+	fmt.Printf("Enviando email para %s: %s\n", e.destinatario, e.conteudo)
+}
+
+type sms struct {
+	numero  string
+	mensagem string
+}
+
+func (s sms) enviar() {
+	fmt.Printf("Enviando SMS para %s: %s\n", s.numero, s.mensagem)
+}
+
+// Função que recebe uma interface
+func notificar(m mensagem) {
+	m.enviar()
+}
+
+func main() {
+	fmt.Println("Interfaces")
+
+	e := email{"usuario@email.com", "Olá, este é um email de teste."}
+	s := sms{"123456789", "Este é um SMS de teste."}
+
+	notificar(e)
+	notificar(s)
+}
+```
+
+### Explicação
+
+1. Criamos a interface `mensagem`, que exige a implementação do método `enviar()`.
+2. Os structs `email` e `sms` implementam esse método de maneiras diferentes.
+3. A função `notificar` recebe qualquer tipo que implemente `mensagem` e chama o método `enviar()`.
+4. No `main()`, criamos instâncias de `email` e `sms` e utilizamos a função `notificar` para enviar mensagens.
