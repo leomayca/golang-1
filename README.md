@@ -1564,3 +1564,125 @@ Mesmo após o `return`, a função dentro do `defer` ainda será executada antes
 - Para garantir que recursos sejam liberados corretamente (arquivos, conexões de banco de dados, etc.).
 - Para organizar a lógica e garantir que certas operações ocorram no final da função.
 - Para depuração e logs estruturados.
+
+## 24. Funções Avançadas - Panic e Recover
+
+Em Go, `panic` e `recover` são mecanismos usados para lidar com erros inesperados que podem interromper a execução do programa.
+
+### 🔥 `panic`
+
+A função `panic` é usada para interromper a execução normal do programa e lançar um erro.  
+Quando `panic` é chamado:
+
+- A execução da função atual é interrompida.
+- Todas as funções adiadas (`defer`) são executadas antes de o programa ser finalizado.
+
+### 🛡️ `recover`
+
+A função `recover` é usada para capturar um `panic` e evitar que o programa seja encerrado abruptamente.
+
+- `recover` só pode ser usado dentro de uma função chamada via `defer`.
+- Se `recover` capturar um `panic`, a execução do programa continua normalmente.
+
+---
+
+### Exemplo Simples
+
+```go
+package main
+
+import "fmt"
+
+func recuperarExecucao() {
+	if r := recover(); r != nil {
+		fmt.Println("Recuperação em andamento:", r)
+	}
+}
+
+func executar() {
+	defer recuperarExecucao()
+	fmt.Println("Iniciando execução...")
+
+	panic("Ocorreu um erro grave!") // Interrompe a execução
+
+	fmt.Println("Isso nunca será executado")
+}
+
+func main() {
+	fmt.Println("Antes do panic")
+	executar()
+	fmt.Println("Após a recuperação!") // Só será executado se o panic for tratado
+}
+```
+
+### Saída Esperada
+
+```
+Antes do panic
+Iniciando execução...
+Recuperação em andamento: Ocorreu um erro grave!
+Após a recuperação!
+```
+
+---
+
+### Exemplo: Verificando a Média da Aluna
+
+```go
+package main
+
+import "fmt"
+
+func recuperarExecucao() {
+	if r := recover(); r != nil {
+		fmt.Println("Execução recuperada com sucesso:", r)
+	}
+}
+
+func alunaEstaAprovada(n1, n2 float64) bool {
+	defer recuperarExecucao()
+
+	media := (n1 + n2) / 2
+
+	if media > 6 {
+		return true
+	} else if media < 6 {
+		return false
+	}
+
+	// Caso especial onde a média é exatamente 6
+	panic("A MÉDIA É EXATAMENTE 6! Precisamos de uma revisão.")
+}
+
+func main() {
+	fmt.Println("Panic e Recover")
+
+	alunaEstaAprovada(6, 6)
+
+	fmt.Println("Execução continua normalmente.")
+}
+```
+
+### Saída Esperada
+
+```
+Panic e Recover
+Execução recuperada com sucesso: A MÉDIA É EXATAMENTE 6! Precisamos de uma revisão.
+Execução continua normalmente.
+```
+
+---
+
+### 🔄 Quando Usar `panic` e `recover`?
+
+✅ **Casos adequados para `panic`**
+
+- Erros críticos que realmente impedem a continuação do programa.
+- Erros que indicam falha em código de baixo nível, como corrupção de memória ou falha em abrir arquivos essenciais.
+
+🚫 **Casos inadequados para `panic`**
+
+- Erros comuns que podem ser tratados com `if` e `return` (exemplo: erro de entrada do usuário).
+- Controle de fluxo normal do programa.
+
+💡 **Dica**: Em aplicações reais, `recover` deve ser usado com cuidado para evitar mascarar erros que precisam ser corrigidos.
