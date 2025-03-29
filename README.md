@@ -1833,3 +1833,52 @@ func main() {
 3. **Uso dos ponteiros no `main`**
    - `novoNumero` é passado com `&novoNumero`, fornecendo o endereço de memória.
    - A função modifica diretamente esse valor, refletindo a alteração fora da função.
+
+## 27. Funções Avançadas - `init`
+
+A função `init` é uma função especial em Go que é executada automaticamente antes da função `main`.
+
+### Características da função `init`:
+
+- É usada para inicializações antes da execução do programa.
+- Pode ser definida múltiplas vezes no mesmo pacote.
+- Não recebe argumentos nem retorna valores.
+
+---
+
+### Exemplo
+
+```go
+package main
+
+import "fmt"
+
+var n int
+
+func init() {
+	fmt.Println("Executando a função init")
+	n = 10
+}
+
+func main() {
+	fmt.Println("Init")
+	fmt.Println("Função main sendo executada")
+	fmt.Println(n) // 10 (valor inicializado no init)
+}
+```
+
+---
+
+### Explicação
+
+1. **Variável Global `n`**
+
+   - Declarada fora de qualquer função para ser acessível globalmente.
+
+2. **Função `init`**
+
+   - Executada automaticamente antes do `main`.
+   - Inicializa `n = 10` e imprime uma mensagem.
+
+3. **Função `main`**
+   - Exibe mensagens e o valor de `n`, que já foi inicializado no `init`.
