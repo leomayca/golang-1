@@ -1434,3 +1434,133 @@ func main() {
 	}
 }
 ```
+
+## 23. Funções Avançadas - Defer
+
+O `defer` é uma instrução usada para adiar a execução de uma função até que a função envolvente retorne. Isso é útil para garantir que certas operações sejam executadas no final de uma função, como fechamento de arquivos, liberação de recursos ou logs de saída.
+
+### Exemplo Simples
+
+```go
+package main
+
+import "fmt"
+
+func abrirConexao() {
+	fmt.Println("Abrindo conexão com o banco de dados...")
+}
+
+func fecharConexao() {
+	fmt.Println("Fechando conexão com o banco de dados...")
+}
+
+func operacao() {
+	defer fecharConexao() // Esta função será executada por último
+	abrirConexao()
+
+	fmt.Println("Executando operação no banco de dados...")
+}
+
+func main() {
+	fmt.Println("Iniciando aplicação")
+	operacao()
+	fmt.Println("Aplicação finalizada")
+}
+```
+
+### Saída Esperada
+
+```
+Iniciando aplicação
+Abrindo conexão com o banco de dados...
+Executando operação no banco de dados...
+Fechando conexão com o banco de dados...
+Aplicação finalizada
+```
+
+### Explicação
+
+- O `defer` garante que a função `fecharConexao()` será executada apenas no final da função `operacao()`, independentemente de erros ou retornos antecipados.
+- Isso é muito útil para evitar vazamentos de recursos, garantindo que arquivos, conexões ou buffers sejam fechados corretamente.
+
+---
+
+### Exemplo com Múltiplos `defer`
+
+O Go empilha múltiplos `defer` e os executa na ordem LIFO (_Last In, First Out_), ou seja, o último `defer` declarado será executado primeiro.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Início")
+
+	defer fmt.Println("Primeiro defer")
+	defer fmt.Println("Segundo defer")
+	defer fmt.Println("Terceiro defer")
+
+	fmt.Println("Final da função")
+}
+```
+
+### Saída Esperada
+
+```
+Início
+Final da função
+Terceiro defer
+Segundo defer
+Primeiro defer
+```
+
+---
+
+### `defer` em Funções com Retorno
+
+O `defer` também pode ser útil em funções que retornam valores. No exemplo abaixo, ele é usado para exibir uma mensagem após o cálculo da média:
+
+```go
+package main
+
+import "fmt"
+
+func alunaEstaAprovada(n1, n2 float32) bool {
+	defer fmt.Println("Média calculada. Resultado será retornado!")
+
+	fmt.Println("Entrando na função para verificar se a aluna está aprovada")
+
+	media := (n1 + n2) / 2
+
+	if media >= 6 {
+		return true
+	}
+
+	return false
+}
+
+func main() {
+	fmt.Println("Defer em funções com retorno")
+	fmt.Println(alunaEstaAprovada(7, 8))
+}
+```
+
+### Saída Esperada
+
+```
+Defer em funções com retorno
+Entrando na função para verificar se a aluna está aprovada
+Média calculada. Resultado será retornado!
+true
+```
+
+Mesmo após o `return`, a função dentro do `defer` ainda será executada antes do retorno real.
+
+---
+
+### Quando Usar `defer`?
+
+- Para garantir que recursos sejam liberados corretamente (arquivos, conexões de banco de dados, etc.).
+- Para organizar a lógica e garantir que certas operações ocorram no final da função.
+- Para depuração e logs estruturados.
