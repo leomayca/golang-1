@@ -2019,3 +2019,71 @@ func main() {
 2. Os structs `email` e `sms` implementam esse método de maneiras diferentes.
 3. A função `notificar` recebe qualquer tipo que implemente `mensagem` e chama o método `enviar()`.
 4. No `main()`, criamos instâncias de `email` e `sms` e utilizamos a função `notificar` para enviar mensagens.
+
+### 30. Interfaces do Tipo Genérico
+
+Em Go, é possível utilizar interfaces genéricas para aceitar valores de diferentes tipos sem a necessidade de definir um tipo específico. Isso é útil para criar funções mais flexíveis e reutilizáveis.
+
+#### Uso da Interface `interface{}`
+
+Antes do Go 1.18, o tipo `interface{}` era usado como uma forma de representar qualquer valor:
+
+```go
+package main
+
+import "fmt"
+
+func imprimirValor(valor interface{}) {
+	fmt.Println("Valor recebido:", valor)
+}
+
+func main() {
+	imprimirValor(10)
+	imprimirValor("Texto")
+	imprimirValor(true)
+	imprimirValor(3.14)
+}
+```
+
+Nesse exemplo, a função `imprimirValor` pode receber qualquer tipo de dado e exibir seu valor.
+
+#### Uso do `any` (Go 1.18+)
+
+A partir do Go 1.18, foi introduzido o alias `any`, que é equivalente a `interface{}`. Ambos podem ser usados da mesma forma:
+
+```go
+package main
+
+import "fmt"
+
+func imprimirValor(valor any) {
+	fmt.Println("Valor recebido:", valor)
+}
+
+func main() {
+	imprimirValor(42)
+	imprimirValor("Exemplo")
+	imprimirValor([]int{1, 2, 3})
+}
+```
+
+#### Dicionários com Chaves e Valores Genéricos
+
+Também podemos utilizar interfaces genéricas para armazenar diferentes tipos de dados em mapas:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	dados := map[interface{}]interface{}{
+		"Nome":  "Ana",
+		"Idade": 22,
+		"Altura": 1.68,
+		true:    "Valor booleano",
+	}
+
+	fmt.Println(dados)
+}
+```
