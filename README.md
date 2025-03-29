@@ -1779,3 +1779,57 @@ func main() {
 - Permitem que funções "lembrem" o contexto em que foram criadas.
 - São úteis para encapsular estados sem precisar de variáveis globais.
 - Podem ser usadas para criar geradores, caches e controle de estado em programas Go.
+
+## 26. Funções Avançadas - Ponteiros em Funções
+
+Em Go, os ponteiros permitem que funções modifiquem valores diretamente na memória, sem precisar retornar um novo valor. Isso evita cópias desnecessárias e melhora a eficiência do código.
+
+---
+
+### Exemplo
+
+```go
+package main
+
+import "fmt"
+
+func inverterSinal(numero int) int {
+	return numero * -1
+}
+
+func inverterSinalComPonteiro(numero *int) {
+	*numero = *numero * -1
+}
+
+func main() {
+	fmt.Println("Ponteiros")
+
+	numero := 20
+	numeroInvertido := inverterSinal(numero)
+	fmt.Println(numeroInvertido) // -20
+	fmt.Println(numero)          // 20 (valor original não foi alterado)
+
+	novoNumero := 40
+	fmt.Println(novoNumero) // 40
+	inverterSinalComPonteiro(&novoNumero)
+	fmt.Println(novoNumero) // -40 (valor foi alterado diretamente na memória)
+}
+```
+
+---
+
+### Explicação
+
+1. **Função sem ponteiro** (`inverterSinal`)
+
+   - Recebe um número, multiplica por `-1` e retorna o novo valor.
+   - O valor original não é alterado, pois a função trabalha com uma cópia do argumento.
+
+2. **Função com ponteiro** (`inverterSinalComPonteiro`)
+
+   - Recebe um **ponteiro** para um número.
+   - Acessa o valor na memória usando `*numero` e altera diretamente.
+
+3. **Uso dos ponteiros no `main`**
+   - `novoNumero` é passado com `&novoNumero`, fornecendo o endereço de memória.
+   - A função modifica diretamente esse valor, refletindo a alteração fora da função.
