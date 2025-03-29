@@ -1569,7 +1569,7 @@ Mesmo após o `return`, a função dentro do `defer` ainda será executada antes
 
 Em Go, `panic` e `recover` são mecanismos usados para lidar com erros inesperados que podem interromper a execução do programa.
 
-### 🔥 `panic`
+### `panic`
 
 A função `panic` é usada para interromper a execução normal do programa e lançar um erro.  
 Quando `panic` é chamado:
@@ -1577,7 +1577,7 @@ Quando `panic` é chamado:
 - A execução da função atual é interrompida.
 - Todas as funções adiadas (`defer`) são executadas antes de o programa ser finalizado.
 
-### 🛡️ `recover`
+### `recover`
 
 A função `recover` é usada para capturar um `panic` e evitar que o programa seja encerrado abruptamente.
 
@@ -1673,16 +1673,109 @@ Execução continua normalmente.
 
 ---
 
-### 🔄 Quando Usar `panic` e `recover`?
+### Quando Usar `panic` e `recover`?
 
-✅ **Casos adequados para `panic`**
+**Casos adequados para `panic`**
 
 - Erros críticos que realmente impedem a continuação do programa.
 - Erros que indicam falha em código de baixo nível, como corrupção de memória ou falha em abrir arquivos essenciais.
 
-🚫 **Casos inadequados para `panic`**
+**Casos inadequados para `panic`**
 
 - Erros comuns que podem ser tratados com `if` e `return` (exemplo: erro de entrada do usuário).
 - Controle de fluxo normal do programa.
 
-💡 **Dica**: Em aplicações reais, `recover` deve ser usado com cuidado para evitar mascarar erros que precisam ser corrigidos.
+**Dica**: Em aplicações reais, `recover` deve ser usado com cuidado para evitar mascarar erros que precisam ser corrigidos.
+
+Aqui está a continuação do seu README sobre funções **Closure** em Go:
+
+---
+
+## 25. Funções Avançadas - Closures
+
+Em Go, uma **closure** (função anônima fechada sobre um escopo) é uma função que "lembra" o ambiente no qual foi criada, permitindo que ela acesse variáveis externas mesmo após a execução do escopo onde foram declaradas.
+
+---
+
+### Exemplo Simples
+
+```go
+package main
+
+import "fmt"
+
+func closure() func() {
+	texto := "Dentro da função closure"
+
+	funcao := func() {
+		fmt.Println(texto) // Acessa "texto" mesmo após a execução da função "closure"
+	}
+
+	return funcao
+}
+
+func main() {
+	fmt.Println("Closure")
+
+	texto := "Dentro da função main"
+	fmt.Println(texto)
+
+	funcaoNova := closure()
+	funcaoNova() // Imprime "Dentro da função closure"
+}
+```
+
+### Explicação
+
+1. A função `closure` declara uma variável `texto` dentro de seu escopo.
+2. Depois, ela retorna uma **função anônima** que acessa essa variável.
+3. Mesmo depois que `closure()` termina a execução, a função retornada **continua acessando** a variável `texto`.
+
+### Saída Esperada
+
+```
+Closure
+Dentro da função main
+Dentro da função closure
+```
+
+---
+
+### Exemplo com Contador
+
+```go
+package main
+
+import "fmt"
+
+func contador() func() int {
+	numero := 0
+
+	return func() int {
+		numero++
+		return numero
+	}
+}
+
+func main() {
+	incrementa := contador()
+
+	fmt.Println(incrementa()) // 1
+	fmt.Println(incrementa()) // 2
+	fmt.Println(incrementa()) // 3
+
+	novaContagem := contador()
+	fmt.Println(novaContagem()) // 1 (novo escopo)
+}
+```
+
+### Como Funciona?
+
+- `contador()` retorna uma função que incrementa e mantém o valor de `numero` dentro do seu escopo.
+- Mesmo após `contador()` terminar, a variável `numero` **não é perdida**, pois a closure mantém seu valor.
+
+### Benefícios das Closures
+
+- Permitem que funções "lembrem" o contexto em que foram criadas.
+- São úteis para encapsular estados sem precisar de variáveis globais.
+- Podem ser usadas para criar geradores, caches e controle de estado em programas Go.
