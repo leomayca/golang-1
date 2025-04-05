@@ -73,3 +73,87 @@ Imagine que `contar` é uma tarefa demorada, como baixar dados da internet, e `c
 ### Atenção
 
 Nesse exemplo, o programa pode acabar antes da goroutine `contar` terminar, porque o `main` não espera por ela. Para evitar isso, podemos adicionar sincronização (como um `time.Sleep` ou um `WaitGroup`), mas isso será explorado em tópicos futuros.
+
+## 35. Wait Group
+
+Em Go, **goroutines** são executadas de forma assíncrona. No entanto, isso pode causar situações em que o programa principal termine antes que as goroutines finalizem suas execuções. Para resolver esse problema, podemos utilizar o **WaitGroup**, que permite aguardar a finalização de múltiplas goroutines antes de continuar a execução do programa.
+
+### O que é `sync.WaitGroup`?
+
+O `WaitGroup` é uma estrutura da biblioteca `sync` que permite controlar e aguardar a finalização de goroutines. Com ele, é possível adicionar contadores para cada tarefa em paralelo e esperar até que todas elas sejam concluídas.
+
+### Exemplo Básico
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	var wg sync.WaitGroup
+
+	wg.Add(1) // Adiciona uma tarefa ao contador
+
+	go func() {
+		fmt.Println("Executando tarefa em goroutine")
+		wg.Done() // Informa que a tarefa terminou
+	}()
+
+	wg.Wait() // Aguarda até que todas as tarefas terminem
+	fmt.Println("Todas as goroutines finalizaram")
+}
+```
+
+### Exemplo com Múltiplas Goroutines e Espera
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+
+	tarefas := []string{
+		"Tarefa 1 - Processar dados",
+		"Tarefa 2 - Gerar relatório",
+		"Tarefa 3 - Enviar email",
+	}
+
+	for _, tarefa := range tarefas {
+		wg.Add(1)
+		go func(t string) {
+			defer wg.Done()
+			fmt.Println(t, "iniciada")
+			time.Sleep(2 * time.Second)
+			fmt.Println(t, "finalizada")
+		}(tarefa)
+	}
+
+	wg.Wait()
+	fmt.Println("Todas as tarefas foram concluídas")
+}
+```
+
+### Explicação dos métodos:
+
+- `wg.Add(n)`: Informa que n goroutines serão aguardadas.
+- `wg.Done()`: Deve ser chamado ao final de cada goroutine para sinalizar que terminou.
+- `wg.Wait()`: Faz o programa esperar até que todas as goroutines finalizem (`Done()` seja chamado para cada `Add`).
+
+### Dica Importante
+
+Sempre que usar `WaitGroup` com goroutines dentro de loops, **lembre-se de passar variáveis como parâmetro**, como feito acima (`(t string)`), para evitar o problema de _variável compartilhada_ (closure com valor inesperado).
+
+### Quando usar `WaitGroup`?
+
+- Quando você precisa aguardar que várias tarefas assíncronas finalizem.
+- Quando está trabalhando com processamento concorrente que precisa ser sincronizado no final.
+- Em cenários com paralelismo, mas onde a ordem de execução não importa, apenas a conclusão completa.
