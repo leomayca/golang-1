@@ -157,3 +157,95 @@ Sempre que usar `WaitGroup` com goroutines dentro de loops, **lembre-se de passa
 - Quando você precisa aguardar que várias tarefas assíncronas finalizem.
 - Quando está trabalhando com processamento concorrente que precisa ser sincronizado no final.
 - Em cenários com paralelismo, mas onde a ordem de execução não importa, apenas a conclusão completa.
+
+## 36. Canais
+
+**Canais (Channels)** em Go são usados para permitir a **comunicação segura entre goroutines**. Eles servem como um meio para que uma goroutine envie dados e outra goroutine os receba, garantindo sincronização sem a necessidade de mecanismos manuais de bloqueio.
+
+### Criando um Canal
+
+Para criar um canal, usamos a função `make`:
+
+```go
+canal := make(chan string)
+```
+
+Isso cria um canal capaz de transportar valores do tipo `string`.
+
+### Enviando e Recebendo dados
+
+- **Enviar**: `canal <- "mensagem"`
+- **Receber**: `msg := <-canal`
+
+### Exemplo Básico com Goroutine
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	canal := make(chan string)
+
+	go escrever("Golang é top!", canal)
+
+	for msg := range canal {
+		fmt.Println(msg)
+	}
+
+	fmt.Println("Fim do programa")
+}
+
+func escrever(texto string, canal chan string) {
+	for i := 0; i < 3; i++ {
+		canal <- fmt.Sprintf("%d - %s", i+1, texto)
+		time.Sleep(time.Second)
+	}
+	close(canal) // Fecha o canal após o envio
+}
+```
+
+### Explicação:
+
+- A função `escrever` envia uma mensagem para o canal a cada segundo.
+- A função `main` escuta o canal com um `for range`, imprimindo cada mensagem recebida.
+- O canal é fechado com `close(canal)` para indicar que nenhum outro dado será enviado. Isso evita deadlocks e permite que o `range` pare de escutar.
+
+### Forma Alternativa: Recebendo com Verificação
+
+```go
+for {
+	mensagem, aberto := <-canal
+	if !aberto {
+		break
+	}
+	fmt.Println(mensagem)
+}
+```
+
+Essa forma permite checar se o canal ainda está aberto.
+
+### Comunicação entre Goroutines
+
+Canais são úteis para sincronizar tarefas:
+
+```go
+done := make(chan bool)
+
+go func() {
+	// fazer algo
+	time.Sleep(2 * time.Second)
+	done <- true
+}()
+
+<-done // Aguarda até que a goroutine envie sinal
+```
+
+### Quando Usar Canais?
+
+- Para sincronizar tarefas assíncronas.
+- Quando uma goroutine precisa esperar dados de outra.
+- Para evitar o uso manual de mutexes ou waitgroups em fluxos simples de comunicação.
