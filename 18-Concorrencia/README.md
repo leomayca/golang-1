@@ -427,3 +427,86 @@ default:
 - Quando há múltiplas goroutines produzindo dados em canais diferentes.
 - Quando você precisa lidar com canais em diferentes ritmos.
 - Para evitar travamentos em canais que podem demorar a responder.
+
+## 39. Padrões de Concorrência - Worker Pools
+
+Em Go, **Worker Pools** são um padrão comum para otimizar o uso de goroutines e processar tarefas concorrentes de forma eficiente. Eles ajudam a **controlar a quantidade de trabalho sendo executado simultaneamente**, evitando o uso excessivo de recursos do sistema.
+
+### O que é um Worker Pool?
+
+Um _Worker Pool_ consiste em:
+
+- Um **conjunto de workers** (goroutines) que processam tarefas.
+- Um **canal de entrada** com as tarefas.
+- Um **canal de saída** com os resultados processados.
+
+Em vez de criar uma goroutine para cada tarefa (o que pode causar sobrecarga), você cria um número fixo de workers que pegam tarefas do canal e as executam.
+
+### Exemplo de Worker Pool
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Worker Pools")
+
+	tarefas := make(chan int, 45)
+	resultados := make(chan int, 45)
+
+	// Criando 3 workers
+	for i := 0; i < 3; i++ {
+		go worker(tarefas, resultados)
+	}
+
+	// Enviando tarefas (cálculo de fibonacci)
+	for i := 0; i < 45; i++ {
+		tarefas <- i
+	}
+	close(tarefas)
+
+	// Recebendo os resultados
+	for i := 0; i < 45; i++ {
+		fmt.Println(<-resultados)
+	}
+}
+
+func worker(tarefas <-chan int, resultados chan<- int) {
+	for numero := range tarefas {
+		resultados <- fibonacci(numero)
+	}
+}
+
+func fibonacci(posicao int) int {
+	if posicao <= 1 {
+		return posicao
+	}
+	return fibonacci(posicao-2) + fibonacci(posicao-1)
+}
+```
+
+### O que está acontecendo aqui?
+
+1. **Criamos os canais** `tarefas` e `resultados`.
+2. **Três workers** são iniciados como goroutines com a função `worker`.
+3. **45 tarefas** (números inteiros) são enviadas para o canal `tarefas`.
+4. Cada worker consome valores do canal `tarefas` e envia o resultado (o valor de Fibonacci) para o canal `resultados`.
+5. O programa imprime os 45 resultados.
+
+### Vantagens do Worker Pool
+
+- Evita criar goroutines demais.
+- Controla melhor o consumo de recursos.
+- Facilita o balanceamento de carga entre workers.
+- É mais previsível e escalável em sistemas concorrentes.
+
+### Quando usar?
+
+- Quando você tem **muitas tarefas independentes** a serem executadas.
+- Quando quer **limitar o número de goroutines** que rodam simultaneamente.
+- Ao processar filas de mensagens, jobs em segundo plano, ou requisições em lote.
+
+### Dica
+
+Você pode ajustar o número de workers (`go worker(...)`) de acordo com a carga esperada e a capacidade do seu sistema.
