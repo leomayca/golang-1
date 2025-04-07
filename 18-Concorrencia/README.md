@@ -338,3 +338,92 @@ func main() {
 	}
 }
 ```
+
+## 38. Select
+
+O `select` em Go é uma poderosa construção que permite **aguardar múltiplas operações de canal ao mesmo tempo**. Ele funciona como um `switch`, mas para canais. Assim que um dos canais estiver pronto para envio ou recebimento, o `select` executa o bloco de código correspondente.
+
+### Exemplo Básico
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	fmt.Println("Select")
+
+	canal1 := make(chan string)
+	canal2 := make(chan string)
+
+	go func() {
+		for {
+			time.Sleep(time.Millisecond * 500)
+			canal1 <- "Mensagem do Canal 1"
+		}
+	}()
+
+	go func() {
+		for {
+			time.Sleep(time.Second * 2)
+			canal2 <- "Mensagem do Canal 2"
+		}
+	}()
+
+	for {
+		select {
+		case msg1 := <-canal1:
+			fmt.Println("Recebido:", msg1)
+		case msg2 := <-canal2:
+			fmt.Println("Recebido:", msg2)
+		}
+	}
+}
+```
+
+### Como funciona?
+
+- O `select` escuta os dois canais.
+- Ele **executa o primeiro caso disponível**, ou seja, o primeiro canal que tiver uma mensagem pronta.
+- Se **mais de um canal estiver pronto**, ele escolhe **aleatoriamente entre eles**.
+- Se **nenhum canal estiver pronto**, o `select` **bloqueia até que algum esteja**.
+
+### Exemplo com `default`
+
+Você pode usar o `default` para evitar o bloqueio quando nenhum canal estiver pronto:
+
+```go
+select {
+case msg := <-canal1:
+	fmt.Println("Canal 1:", msg)
+case msg := <-canal2:
+	fmt.Println("Canal 2:", msg)
+default:
+	fmt.Println("Nenhum canal pronto, continuando execução...")
+}
+```
+
+### Usos comuns do `select`:
+
+- **Multiplexação** de canais (como no exemplo acima).
+- **Timeouts** com `time.After`:
+
+  ```go
+  select {
+  case msg := <-canal:
+  	fmt.Println("Recebido:", msg)
+  case <-time.After(time.Second * 3):
+  	fmt.Println("Timeout após 3 segundos")
+  }
+  ```
+
+- **Finalização de goroutines** usando canais de controle.
+
+### Quando usar?
+
+- Quando há múltiplas goroutines produzindo dados em canais diferentes.
+- Quando você precisa lidar com canais em diferentes ritmos.
+- Para evitar travamentos em canais que podem demorar a responder.
