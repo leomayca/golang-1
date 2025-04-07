@@ -249,3 +249,92 @@ go func() {
 - Para sincronizar tarefas assíncronas.
 - Quando uma goroutine precisa esperar dados de outra.
 - Para evitar o uso manual de mutexes ou waitgroups em fluxos simples de comunicação.
+
+## 37. Canais com Buffer
+
+Canais com buffer (ou canais **bufferizados**) em Go permitem enviar valores mesmo que **nenhuma goroutine esteja imediatamente pronta para recebê-los**. Eles armazenam os dados até que sejam recebidos, funcionando como uma fila temporária.
+
+### Criando um Canal com Buffer
+
+Você define o tamanho do buffer ao criar o canal com `make`:
+
+```go
+canal := make(chan string, 2)
+```
+
+Nesse exemplo, o canal pode armazenar **até 2 valores** antes que qualquer recebedor seja necessário.
+
+### Envio e Recebimento
+
+Com canais bufferizados, você pode fazer:
+
+```go
+canal <- "Mensagem 1"
+canal <- "Mensagem 2"
+```
+
+Mesmo sem nenhuma goroutine recebendo imediatamente. Os valores ficam armazenados no canal até serem lidos.
+
+### Exemplo Prático
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Canais com buffer")
+
+	canal := make(chan string, 2)
+
+	canal <- "Hello World!"
+	canal <- "Programando em Go!"
+
+	mensagem1 := <-canal
+	mensagem2 := <-canal
+
+	fmt.Println(mensagem1)
+	fmt.Println(mensagem2)
+}
+```
+
+**Saída:**
+
+```
+Canais com buffer
+Hello World!
+Programando em Go!
+```
+
+### O Que Acontece se Ultrapassar o Buffer?
+
+Se você tentar enviar mais dados do que o canal suporta **sem receber nada**, o programa ficará bloqueado até que um dado seja retirado do canal:
+
+```go
+canal := make(chan int, 1)
+
+canal <- 1
+canal <- 2 // Aqui o programa trava até alguém ler o primeiro valor
+```
+
+### Usando com Goroutines
+
+Canais com buffer também podem ser usados para comunicação entre goroutines com mais flexibilidade:
+
+```go
+func escrever(canal chan string) {
+	canal <- "Escrevendo 1"
+	canal <- "Escrevendo 2"
+	canal <- "Escrevendo 3"
+	close(canal)
+}
+
+func main() {
+	c := make(chan string, 3)
+	go escrever(c)
+
+	for msg := range c {
+		fmt.Println(msg)
+	}
+}
+```
