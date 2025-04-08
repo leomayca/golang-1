@@ -510,3 +510,92 @@ func fibonacci(posicao int) int {
 ### Dica
 
 Você pode ajustar o número de workers (`go worker(...)`) de acordo com a carga esperada e a capacidade do seu sistema.
+
+## 40. Padrões de Concorrência - Generator
+
+O padrão de concorrência **Generator** em Go permite que funções gerem uma sequência de valores sob demanda, utilizando **canais** e **goroutines**.
+
+Esse padrão é útil quando queremos criar um fluxo contínuo ou preguiçoso (_lazy_) de dados sem bloquear a execução principal.
+
+### O que é um Generator?
+
+Um _Generator_ é uma função que **retorna um canal de saída** (`<-chan tipo`) e envia valores continuamente (ou conforme a lógica), geralmente dentro de uma goroutine.
+
+### Exemplo Prático
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	fmt.Println("Generators")
+
+	canal := escrever("Hello World!")
+
+	for i := 0; i < 10; i++ {
+		fmt.Println(<-canal)
+	}
+}
+
+func escrever(texto string) <-chan string {
+	canal := make(chan string)
+
+	go func() {
+		for {
+			canal <- fmt.Sprintf("Valor recebido: %s", texto)
+			time.Sleep(time.Millisecond * 500)
+		}
+	}()
+
+	return canal
+}
+```
+
+### Explicação
+
+- A função `escrever` **retorna um canal** por onde as mensagens serão enviadas.
+- Dentro da função anônima (goroutine), o texto é enviado repetidamente com um pequeno intervalo.
+- No `main`, o canal é consumido em um loop, pegando os 10 primeiros valores.
+
+### Características do Generator
+
+- Usa **goroutines** para executar a geração em segundo plano.
+- Usa **canais** para comunicar valores gerados.
+- É útil quando você quer desacoplar a **produção de dados** do seu **consumo**.
+- Ideal para criar _pipelines de processamento_.
+
+### Quando usar?
+
+- Para gerar sequências infinitas ou semi-infinita de valores.
+- Para transformar uma lógica de produção de dados em um componente reutilizável.
+- Em sistemas reativos, pipelines ou simulações.
+
+### Exemplo com Contador
+
+Um gerador que produz números incrementais:
+
+```go
+func contador() <-chan int {
+	canal := make(chan int)
+
+	go func() {
+		for i := 0; ; i++ {
+			canal <- i
+			time.Sleep(time.Millisecond * 300)
+		}
+	}()
+
+	return canal
+}
+
+func main() {
+	numeros := contador()
+	for i := 0; i < 5; i++ {
+		fmt.Println(<-numeros)
+	}
+}
+```
