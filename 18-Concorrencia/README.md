@@ -599,3 +599,84 @@ func main() {
 	}
 }
 ```
+
+## 41. Padrões de Concorrência - Multiplexador
+
+O padrão de concorrência **Multiplexador** em Go tem como objetivo **combinar múltiplos canais de entrada** em **um único canal de saída**. Ele permite que valores oriundos de diferentes origens sejam processados de forma centralizada, sem perder a concorrência entre as fontes.
+
+### Quando usar um Multiplexador?
+
+- Quando você quer **consolidar** dados de múltiplas goroutines.
+- Quando precisa **observar várias fontes de dados simultaneamente**.
+- Para simplificar o consumo de eventos concorrentes em um único ponto.
+
+### Exemplo Prático
+
+```go
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func main() {
+	fmt.Println("Multiplexador")
+
+	canal := multiplexar(escrever("Hello World!"), escrever("Programando em Go!"))
+
+	for i := 0; i < 10; i++ {
+		fmt.Println(<-canal)
+	}
+}
+
+func escrever(texto string) <-chan string {
+	canal := make(chan string)
+
+	go func() {
+		for {
+			canal <- fmt.Sprintf("Valor recebido: %s", texto)
+			time.Sleep(time.Millisecond * time.Duration(rand.Intn(2000)))
+		}
+	}()
+
+	return canal
+}
+
+func multiplexar(canal1, canal2 <-chan string) <-chan string {
+	saida := make(chan string)
+
+	go func() {
+		for {
+			select {
+			case msg := <-canal1:
+				saida <- msg
+			case msg := <-canal2:
+				saida <- msg
+			}
+		}
+	}()
+
+	return saída
+}
+```
+
+### Explicação
+
+- A função `escrever` retorna um canal que emite mensagens com delays aleatórios.
+- A função `multiplexar` recebe dois canais como entrada e retorna **um canal único de saída**.
+- Dentro de uma goroutine, o `select` escuta os dois canais e envia qualquer mensagem recebida para o canal final.
+- No `main`, o programa consome 10 mensagens do canal único, que vêm intercaladas das duas fontes.
+
+### Visualizando o Fluxo
+
+```
+escrever("Hello World!") ┐
+                          ├──> multiplexar() ──> canal final ──> consumidor
+escrever("Programando!") ┘
+```
+
+### Variação com Múltiplos Canais
+
+Você pode generalizar o padrão usando _slices_ de canais e reflet, mas a versão acima cobre bem os conceitos principais para a maioria dos usos.
