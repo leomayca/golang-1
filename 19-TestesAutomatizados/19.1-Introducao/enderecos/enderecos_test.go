@@ -1,7 +1,10 @@
 // TESTE DE UNIDADE
-package enderecos
+package enderecos_test
 
-import "testing"
+import (
+	. "inroducao-testes/enderecos"
+	"testing"
+)
 
 type cenarioDeTeste struct {
 	enderecoInserido string
