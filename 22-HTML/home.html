@@ -7,21 +7,23 @@
 
     <style>
       h2 {
-        color: #c9c9c9;
+        color: #757575;
         font-size: 50px;
         font-family: Arial, Helvetica, sans-serif;
-      }
-
-      marquee {
-        color: blue;
       }
     </style>
   </head>
   <body>
     <h2>Página Principal</h2>
 
-    <marquee>
-      <h4>Seja bem vindo, {{ .Nome }}!</h4>
-    </marquee>
+    <button id="botao">Clique em mim!</button>
+
+    <script>
+      const botao = document.getElementById("botao");
+
+      botao.onclick = () => {
+        alert("Botão clicado com sucesso!");
+      };
+    </script>
   </body>
 </html>
